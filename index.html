@@ -10,137 +10,195 @@
       background: #f4f6f8;
       margin: 0;
       padding: 0;
-      text-align: center;
     }
 
-    /* LOGO */
+    /* 🔵 LOGO TOPO */
     .top-logo {
       width: 100%;
       background: #ffffff;
+      text-align: center;
       padding: 40px 0;
       border-bottom: 2px solid #eaeaea;
     }
 
     .top-logo img {
-      width: 600px;
+      width: 500px;
       max-width: 90%;
-      display: block;
-      margin: 0 auto;
     }
 
-    /* CONTAINER */
+    /* 🔵 CONTAINER */
     .container {
       max-width: 520px;
       margin: 40px auto;
       background: white;
-      padding: 30px;
+      padding: 35px;
       border-radius: 12px;
       box-shadow: 0px 6px 18px rgba(0,0,0,0.12);
+      text-align: center;
     }
 
     input {
       width: 85%;
       padding: 12px;
-      font-size: 16px;
+      font-size: 15px;
       border: 1px solid #ccc;
       border-radius: 6px;
     }
 
     button {
-      margin-top: 15px;
+      margin-top: 18px;
       padding: 14px 25px;
+      cursor: pointer;
       font-weight: bold;
+      font-size: 16px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 6px;
       background: #1a73e8;
       color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 6px;
-      text-transform: uppercase;
+    }
+
+    button:hover {
+      background: #1558b0;
     }
 
     #resultado {
-      margin-top: 25px;
+      margin-top: 35px;
+      text-align: center;
     }
 
     .ok {
-      color: green;
+      color: #1a7f37;
+      font-size: 18px;
       font-weight: bold;
+      margin-bottom: 15px;
     }
 
     .error {
-      color: red;
+      color: #b00020;
       font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .result-box {
+      text-align: left;
+      margin-top: 15px;
+      line-height: 1.6;
     }
 
     .loading {
+      margin-top: 20px;
+      font-style: italic;
       color: #555;
     }
+
+    /* 🔵 ANIMAÇÃO PISCAR LENTO */
+    @keyframes blink {
+      0% { opacity: 1; }
+      85% { opacity: 1; }
+      90% { opacity: 0; }
+      95% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .blink {
+      animation: blink 4s infinite;
+    }
+
   </style>
 </head>
 
 <body>
 
-<!-- LOGO (COLE SEU LINK AQUI) -->
-<div class="top-logo">
-  <img src="https://raw.githubusercontent.com/nucleoevolution/Logo_certificado/main/Sap%20Essentials%20logo%20EDIT.png" alt="Logo do Curso">
-</div>
+  <!-- 🔵 LOGO -->
+  <div class="top-logo">
+    <img src="https://raw.githubusercontent.com/nucleoevolution/Logo_certificado/main/Sap%20Essentials%20logo%20EDIT.png">
+  </div>
 
-<div class="container">
+  <!-- 🔵 CONTAINER -->
+  <div class="container">
 
-  <h2>Validação de Certificado</h2>
+    <h2>Validação de Certificado</h2>
 
-  <input id="codigo" placeholder="Digite o código autenticador">
+    <input type="text" id="codigo" placeholder="Digite o código do certificado">
 
-  <br>
+    <br>
 
-  <button onclick="verificar()">VERIFICAR</button>
+    <button onclick="verificar()">VERIFICAR</button>
 
-  <div id="resultado"></div>
+    <div id="resultado"></div>
 
-</div>
+  </div>
 
-<script>
+  <script>
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkZHLDH4w7SsCigmNX8QTjnmKHJd1wZiFczERnPx9v-DPXgUhwTZ-jn7RcEed_5C2p/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkZHLDH4w7SsCigmNX8QTjnmKHJd1wZiFczERnPx9v-DPXgUhwTZ-jn7RcEed_5C2p/exec";
 
-async function verificar() {
+    async function verificar() {
 
-  var codigo = document.getElementById("codigo").value.trim();
+      var codigo = document.getElementById("codigo").value.trim();
 
-  if (!codigo) {
-    document.getElementById("resultado").innerHTML =
-      "<div class='error'>Nenhum código digitado... Digite o código!</div>";
-    return;
-  }
-
-  document.getElementById("resultado").innerHTML =
-    "<div class='loading'>Verificando...</div>";
-
-  try {
-
-    const response = await fetch(APPS_SCRIPT_URL + "?codigo=" + encodeURIComponent(codigo));
-    const res = await response.json();
-
-    if (res.valido) {
+      if (!codigo) {
+        document.getElementById("resultado").innerHTML =
+          "<div class='error blink'>🚫 Digite o código do certificado.</div>";
+        return;
+      }
 
       document.getElementById("resultado").innerHTML =
-        "<div class='ok'>✅ CERTIFICADO VALIDADO EM NOSSO SISTEMA</div><br>" +
-        "👤 Nome: " + res.nome;
+        "<div class='loading'>🔄 Verificando certificado...</div>";
 
-    } else {
+      try {
 
-      document.getElementById("resultado").innerHTML =
-        "<div class='error'>❌ Certificado não encontrado. Por favor, verifique se o código foi digitado de forma correta e tente novamente!</div>";
+        const response = await fetch(APPS_SCRIPT_URL + "?codigo=" + encodeURIComponent(codigo));
+        const res = await response.json();
+
+        if (res.valido) {
+
+          document.getElementById("resultado").innerHTML =
+            "<div class='ok blink'>🟢 SEU CERTIFICADO FOI VALIDADO COM SUCESSO EM NOSSO SISTEMA</div>" +
+            "<div class='result-box'>" +
+            "<p><b>👤 Nome:</b> " + res.nome + "</p>" +
+            "<p><b>📅 Emissão:</b> " + res.dia + " " + res.mesPT + " " + res.ano + "</p>" +
+            "<p><b>🔐 Status:</b> Certificado Autêntico</p>" +
+            "</div>";
+
+        } else {
+
+          document.getElementById("resultado").innerHTML =
+            "<div class='error blink'>🚫 Certificado não encontrado. Verifique o código.</div>";
+
+        }
+
+      } catch (e) {
+
+        document.getElementById("resultado").innerHTML =
+          "<div class='error blink'>🚫 Erro ao conectar com o servidor.</div>";
+
+      }
     }
 
-  } catch (e) {
+    // 🔵 QR CODE AUTO PREENCHIMENTO
+    document.addEventListener("DOMContentLoaded", function () {
 
-    document.getElementById("resultado").innerHTML =
-      "<div class='error'>Erro ao conectar com o servidor</div>";
-  }
-}
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
 
-</script>
+      if (code) {
+
+        const input = document.getElementById("codigo");
+
+        if (input) {
+          input.value = code.trim();
+
+          setTimeout(function () {
+            verificar();
+          }, 300);
+        }
+      }
+
+    });
+
+  </script>
 
 </body>
 </html>
