@@ -1,0 +1,71 @@
+<script>
+
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkZHLDH4w7SsCigmNX8QTjnmKHJd1wZiFczERnPx9v-DPXgUhwTZ-jn7RcEed_5C2p/exec";
+
+async function verificar() {
+
+  var codigo = document.getElementById("codigo").value.trim();
+
+  if (!codigo) {
+    document.getElementById("resultado").innerHTML =
+      "<div class='error blink-red'>🚫 Por favor, digite o código do certificado.</div>";
+    return;
+  }
+
+  document.getElementById("resultado").innerHTML =
+    "<div class='loading'>🔄 Verificando certificado...</div>";
+
+  try {
+
+    const response = await fetch(APPS_SCRIPT_URL + "?codigo=" + encodeURIComponent(codigo));
+    const res = await response.json();
+
+    if (res.valido) {
+
+      document.getElementById("resultado").innerHTML =
+        "<div class='ok blink-green'>🟢 CERTIFICADO AUTÊNTICO</div>" +
+        "<div class='result-box'>" +
+        "<p><b>👤 Nome:</b> " + res.nome + "</p>" +
+        "<p><b>📅 Emissão:</b> " + res.dia + " " + res.mesPT + " " + res.ano + "</p>" +
+        "<p><b>🔐 Status:</b> Certificado válido</p>" +
+        "</div>";
+
+    } else {
+
+      document.getElementById("resultado").innerHTML =
+        "<div class='error blink-red'>" +
+        "🚫 Certificado não encontrado. Verifique se o código foi digitado de forma correta e tente novamente." +
+        "</div>";
+
+    }
+
+  } catch (e) {
+
+    document.getElementById("resultado").innerHTML =
+      "<div class='error blink-red'>🚫 Erro ao conectar com o servidor. Tente novamente.</div>";
+
+  }
+}
+
+// QR CODE FUNCTION (mantido igual)
+document.addEventListener("DOMContentLoaded", function () {
+
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+
+  if (code) {
+
+    const input = document.getElementById("codigo");
+
+    if (input) {
+      input.value = code.trim();
+
+      setTimeout(function () {
+        verificar();
+      }, 300);
+    }
+  }
+
+});
+
+</script>
