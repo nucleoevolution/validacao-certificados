@@ -9,13 +9,29 @@
       font-family: Arial, sans-serif;
       background: #f4f6f8;
       margin: 0;
-      padding: 40px;
+      padding: 0;
       text-align: center;
     }
 
+    /* LOGO */
+    .top-logo {
+      width: 100%;
+      background: #ffffff;
+      padding: 40px 0;
+      border-bottom: 2px solid #eaeaea;
+    }
+
+    .top-logo img {
+      width: 600px;
+      max-width: 90%;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* CONTAINER */
     .container {
       max-width: 520px;
-      margin: auto;
+      margin: 40px auto;
       background: white;
       padding: 30px;
       border-radius: 12px;
@@ -23,23 +39,27 @@
     }
 
     input {
-      width: 80%;
+      width: 85%;
       padding: 12px;
       font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
 
     button {
       margin-top: 15px;
-      padding: 12px 25px;
+      padding: 14px 25px;
       font-weight: bold;
       background: #1a73e8;
       color: white;
       border: none;
       cursor: pointer;
+      border-radius: 6px;
+      text-transform: uppercase;
     }
 
     #resultado {
-      margin-top: 20px;
+      margin-top: 25px;
     }
 
     .ok {
@@ -60,11 +80,16 @@
 
 <body>
 
+<!-- LOGO (COLE SEU LINK AQUI) -->
+<div class="top-logo">
+  <img src="https://raw.githubusercontent.com/nucleoevolution/Logo_certificado/main/Sap%20Essentials%20logo%20EDIT.png" alt="Logo do Curso">
+</div>
+
 <div class="container">
 
   <h2>Validação de Certificado</h2>
 
-  <input id="codigo" placeholder="Digite o código">
+  <input id="codigo" placeholder="Digite o código autenticador">
 
   <br>
 
@@ -99,13 +124,13 @@ async function verificar() {
     if (res.valido) {
 
       document.getElementById("resultado").innerHTML =
-        "<div class='ok'>✔ CERTIFICADO VÁLIDO</div><br>" +
+        "<div class='ok'>✅ CERTIFICADO VALIDADO EM NOSSO SISTEMA</div><br>" +
         "Nome: " + res.nome;
 
     } else {
 
       document.getElementById("resultado").innerHTML =
-        "<div class='error'>❌ Certificado não encontrado</div>";
+        "<div class='error'>❌ Certificado não encontrado. Por favor, verifique se o código foi digitado de forma correta e tente novamente!</div>";
     }
 
   } catch (e) {
